@@ -10,7 +10,7 @@
 avl_tree_t* avl_tree_init(comparator_func cmpf, deleter_func del_key, deleter_func del_val){
     avl_tree_t* tree = calloc(1, sizeof(avl_tree_t));
     if(!tree) return NULL;
-    
+
     tree->root = NULL;
     tree->cmpf = cmpf;
     tree->del_key = del_key;
@@ -56,16 +56,21 @@ int avl_tree_contains(avl_tree_t* self, void* key){
  * @param key: the key to be inserted
  * @param key: the value associated to the key
  * @returns true if the insertion created a new node, or false if the insertion updated an already existing one.
+ * Note that the update process frees the memory of the older value to avoid memory leaks, so be sure store a pointer to a pointer if you don't want it to be freed.
  */
 int avl_tree_put(avl_tree_t* self, void* key, void* val){
     avl_node_t* node = avl_node_get(self->root, key, self->cmpf);
     if(!node){
         self->root = avl_node_insert(self->root, key, val, self->cmpf);
+        if(!self->root)
+            printf("Insertion failed!\n" );
         return 1;
     }
     else{
         self->del_val(node->val);
+        self->del_key(node->key);
         node->val = val;
+        node->key = key;
         return 0;
     }
 }
@@ -109,7 +114,7 @@ int avl_tree_order_of_key(avl_tree_t* self, void* key){
 
 /**
  * @param self: a pointer to the map
- * @param order: an integer 
+ * @param order: an integer
  * @returns the key in the queried position in the ordered key set
  */
 void* avl_tree_find_by_order(avl_tree_t* self, int order){

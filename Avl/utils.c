@@ -26,6 +26,10 @@ void free_val(void* s){
     free(s);
 }
 
+void dont_free(void* s){
+    //printf("Freeing %p\n", s);
+}
+
 char* get_string(FILE* file){
     char buf[65];
     memset(buf, 0, sizeof(buf));
