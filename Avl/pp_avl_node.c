@@ -320,13 +320,13 @@ avl_node_t* avl_node_remove(avl_node_t* node, void* key, comparator_func cmpf, d
                 avl_node_t* tmp = avl_node_get_last(node->left);
                 node->key = tmp->key;
                 node->val = tmp->val;
-                node->left = avl_node_remove(node->left, tmp->key, cmpf, NULL, NULL);
+                node->left = avl_node_remove(node->left, tmp->key, cmpf, NULL, NULL); //already freed key and val
             }
             else{
                 avl_node_t* tmp = avl_node_get_first(node->right);
                 node->key = tmp->key;
                 node->val = tmp->val;
-                node->right = avl_node_remove(node->right, tmp->key, cmpf, NULL, NULL);
+                node->right = avl_node_remove(node->right, tmp->key, cmpf, NULL, NULL); //already freed key and val
             }
         }
     }

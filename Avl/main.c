@@ -39,6 +39,44 @@ int test_avl_strings(){
     return flag;
 }
 
+int test_avl_strings_removeall(){
+    FILE* in = fopen("in3.txt", "r");
+    FILE* out = fopen("out3.txt", "r");
+    avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val);
+    int n;
+    int flag = 1;
+    fscanf(in, "%d", &n);
+    for(int i=0; i<n; i++){
+        char* val = get_string(in);
+        char* key = get_string(in);
+        avl_tree_put(map, key, val);
+    }
+    fscanf(in, "%d", &n);
+    for(int i=0; i<n; i++){
+        char* key = get_string(in);
+        char* sol = get_string(out);
+        char* val = avl_tree_get(map, key);
+        if((!val && strcmp(sol, "eh")!=0) || (val && strcmp(sol, val)!= 0)){
+            printf("Error : %s %s \n", val, sol);
+            flag = 0;
+        }
+        else{
+            //printf("%s\n", val);
+        }
+        free(key);
+        free(sol);
+    }
+    void* to_remove = NULL;
+    while( to_remove = avl_tree_find_by_order(map, 0) ){
+        avl_tree_remove(map, to_remove);
+    }
+    free(map);
+
+    fclose(in);
+    fclose(out);
+    return flag;
+}
+
 
 int test_avl_random(){
     FILE* in = fopen("in1.txt", "r");
@@ -82,5 +120,5 @@ int main(){
     printf("Starting tests:\n");
     printf("Test random: %d\n", test_avl_random());
     printf("Test strings: %d\n",test_avl_strings());
-
+    printf("Test remove: %d\n",test_avl_strings());
 }
