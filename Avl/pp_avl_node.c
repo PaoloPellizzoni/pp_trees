@@ -10,7 +10,7 @@
 avl_node_t* avl_node_init(void* key, void* val){
     avl_node_t* node = calloc(1, sizeof(avl_node_t));
     if(!node) return NULL;
-    
+
     node->left = NULL;
     node->right = NULL;
     node->key = key;
@@ -31,12 +31,12 @@ void avl_node_free(avl_node_t* node, deleter_func delete_key, deleter_func delet
     if(!node) return;
     avl_node_free(node->left, delete_key, delete_val);
     avl_node_free(node->right, delete_key, delete_val);
-    
+
     if(delete_key)
         delete_key(node->key);
     if(delete_val)
         delete_val(node->val);
-    
+
     free(node);
 }
 
@@ -122,19 +122,19 @@ void avl_node_update(avl_node_t* node){
     node->subtree_size = 1 + leftSize + rightSize;
 }
 
-         
+
 /*          === ROTATIONS ===
 
-     y                                 x 
-    / \      Right Rotation          /  \ 
-   x   T3   - - - - - - - >        T1   y 
-  / \       < - - - - - - -            / \ 
- T1  T2     Left Rotation            T2  T3 
+     y                                 x
+    / \      Right Rotation          /  \
+   x   T3   - - - - - - - >        T1   y
+  / \       < - - - - - - -            / \
+ T1  T2     Left Rotation            T2  T3
 */
 
 /**
  * @param node: the node that pivots the rotation
- * @brief Rotates the tree clockwise 
+ * @brief Rotates the tree clockwise
  */
 avl_node_t* avl_node_right_rotation(avl_node_t* node){
     avl_node_t* tmp = node->left;
@@ -147,7 +147,7 @@ avl_node_t* avl_node_right_rotation(avl_node_t* node){
 
 /**
  * @param node: the node that pivots the rotation
- * @brief Rotates the tree clockwise 
+ * @brief Rotates the tree clockwise
  */
 avl_node_t* avl_node_left_rotation(avl_node_t* node){
     avl_node_t* tmp = node->right;
@@ -159,10 +159,10 @@ avl_node_t* avl_node_left_rotation(avl_node_t* node){
 }
 /*
                 == LEFT-LEFT BALANCE ==
-         z                                      y 
+         z                                      y
         / \                                   /   \
        y   T4      Right Rotate (z)          x      z
-      / \          - - - - - - - - ->      /  \    /  \ 
+      / \          - - - - - - - - ->      /  \    /  \
      x   T3                               T1  T2  T3  T4
     / \
   T1   T2
@@ -175,7 +175,7 @@ avl_node_t* avl_node_left_left_balance(avl_node_t* node){
 /*
                           == LEFT-RIGHT BALANCE ==
      z                               z                           x
-    / \                            /   \                        /  \ 
+    / \                            /   \                        /  \
    y   T4  Left Rotate (y)        x    T4  Right Rotate(z)    y      z
   / \      - - - - - - - - ->    /  \      - - - - - - - ->  / \    / \
 T1   x                          y    T3                    T1  T2 T3  T4
@@ -190,7 +190,7 @@ avl_node_t* avl_node_left_right_balance(avl_node_t* node){
 
 /*
   z                                y
- /  \                            /   \ 
+ /  \                            /   \
 T1   y     Left Rotate(z)       z      x
     /  \   - - - - - - - ->    / \    / \
    T2   x                     T1  T2 T3  T4
@@ -204,7 +204,7 @@ avl_node_t* avl_node_right_right_balance(avl_node_t* node){
 
 /*
    z                            z                            x
-  / \                          / \                          /  \ 
+  / \                          / \                          /  \
 T1   y   Right Rotate (y)    T1   x      Left Rotate(z)   z      y
     / \  - - - - - - - - ->     /  \   - - - - - - - ->  / \    / \
    x   T4                      T2   y                  T1  T2  T3  T4
@@ -221,7 +221,7 @@ avl_node_t* avl_node_right_left_balance(avl_node_t* node){
 /**
  * @param node: the root of the subtree to be balanced
  * @returns the new root of the balanced subtree
- * @brief Balances a subtree to make sure that for each node its left and right subtrees heights differ by at most 1. 
+ * @brief Balances a subtree to make sure that for each node its left and right subtrees heights differ by at most 1.
  */
 avl_node_t* avl_node_balance(avl_node_t* node){
     if(node->balance_factor == -2){
@@ -246,19 +246,19 @@ avl_node_t* avl_node_balance(avl_node_t* node){
  * @param val: the value for the node to be inserted
  * @param cmpf: a pointer to the key comparator function
  * @returns the new root of the balanced subtree
- * @brief Balances a subtree to make sure that for each node its left and right subtrees heights differ by at most 1. 
+ * @brief Balances a subtree to make sure that for each node its left and right subtrees heights differ by at most 1.
  */
 avl_node_t* avl_node_insert(avl_node_t* node, void* key, void* val, comparator_func cmpf){
     if(!node) return avl_node_init(key, val);
-    
+
     int cmp = cmpf(key, node->key);
     if(cmp < 0)
         node->left = avl_node_insert(node->left, key, val, cmpf);
     else
         node->right = avl_node_insert(node->right, key, val, cmpf);
-        
+
     avl_node_update(node);
-    
+
     return avl_node_balance(node);
 }
 
@@ -288,42 +288,51 @@ avl_node_t* avl_node_get_last(avl_node_t* node){
  * @param cmpf: a pointer to the key comparator function
  * @return the root of the updated subtree
 */
-avl_node_t* avl_node_remove(avl_node_t* node, void* key, comparator_func cmpf){
+avl_node_t* avl_node_remove(avl_node_t* node, void* key, comparator_func cmpf, deleter_func del_key, deleter_func del_val){
     if(!node) return NULL;
     int cmp = cmpf(key, node->key);
     if(cmp < 0){ //recur left
-        node->left = avl_node_remove(node->left, key, cmpf);
-    } 
+        node->left = avl_node_remove(node->left, key, cmpf, del_key, del_val);
+    }
     else if(cmp > 0){ //recur right
-        node->right= avl_node_remove(node->right, key, cmpf);
+        node->right= avl_node_remove(node->right, key, cmpf, del_key, del_val);
     }
     else{ // found
+        if(del_key)
+            del_key(node->key);
+        if(del_val)
+            del_val(node->val);
+
+
         if((node->left == NULL) || (node->right == NULL)){
             avl_node_t* tmp = node->left ? node->left : node->right;
             if(!tmp){ //leaf
                 tmp = node;
                 node = NULL;
             }
-            else
+            else{
                 *node = *tmp; //swap nodes
+            }
             free(tmp); // remove the node
         }
         else{
             if(node->left->height > node->right->height){
                 avl_node_t* tmp = avl_node_get_last(node->left);
                 node->key = tmp->key;
-                node->left = avl_node_remove(node->left, tmp->key, cmpf);
+                node->val = tmp->val;
+                node->left = avl_node_remove(node->left, tmp->key, cmpf, NULL, NULL);
             }
             else{
                 avl_node_t* tmp = avl_node_get_first(node->right);
                 node->key = tmp->key;
-                node->right = avl_node_remove(node->right, tmp->key, cmpf);
+                node->val = tmp->val;
+                node->right = avl_node_remove(node->right, tmp->key, cmpf, NULL, NULL);
             }
         }
     }
-    
+
     if(!node) return NULL;
-    
+
     avl_node_update(node);
     return avl_node_balance(node);
 }

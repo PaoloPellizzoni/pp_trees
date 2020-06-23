@@ -34,6 +34,8 @@ int test_avl_strings(){
     }
 
     avl_tree_free(map);
+    fclose(in);
+    fclose(out);
     return flag;
 }
 
@@ -56,6 +58,7 @@ int test_avl_random(){
             }
             else{
                 avl_tree_remove(map, key);
+                free(key);
             }
         }
         else{
@@ -76,6 +79,7 @@ int test_avl_random(){
 }
 
 int main(){
+    printf("Starting tests:\n");
     printf("Test random: %d\n", test_avl_random());
     printf("Test strings: %d\n",test_avl_strings());
 

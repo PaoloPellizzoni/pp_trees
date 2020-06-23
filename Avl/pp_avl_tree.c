@@ -83,7 +83,7 @@ int avl_tree_put(avl_tree_t* self, void* key, void* val){
 int avl_tree_remove(avl_tree_t* self, void* key){
     avl_node_t* node = avl_node_get(self->root, key, self->cmpf);
     if(!node) return 0;
-    self->root = avl_node_remove(self->root, key, self->cmpf);
+    self->root = avl_node_remove(self->root, key, self->cmpf, self->del_key, self->del_val);
     return 1;
 }
 
