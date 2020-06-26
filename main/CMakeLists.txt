@@ -1,7 +1,6 @@
 #Library name
 project(main)
 
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 #Create an executable
 add_executable(main

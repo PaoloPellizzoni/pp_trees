@@ -5,9 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DATA_DIR "../data/"
+
 int test_avl_strings(){
-    FILE* in = fopen("in3.txt", "r");
-    FILE* out = fopen("out3.txt", "r");
+    FILE* in = fopen(DATA_DIR"in3.txt", "r");
+    FILE* out = fopen(DATA_DIR"out3.txt", "r");
     avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val);
     int n;
     int flag = 1;
@@ -40,8 +42,8 @@ int test_avl_strings(){
 }
 
 int test_avl_strings_removeall(){
-    FILE* in = fopen("in3.txt", "r");
-    FILE* out = fopen("out3.txt", "r");
+    FILE* in = fopen(DATA_DIR"in3.txt", "r");
+    FILE* out = fopen(DATA_DIR"out3.txt", "r");
     avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val);
     int n;
     int flag = 1;
@@ -79,8 +81,8 @@ int test_avl_strings_removeall(){
 
 
 int test_avl_random(){
-    FILE* in = fopen("in1.txt", "r");
-    FILE* out = fopen("out1.txt", "r");
+    FILE* in = fopen(DATA_DIR"in1.txt", "r");
+    FILE* out = fopen(DATA_DIR"out1.txt", "r");
     avl_tree_t* map = avl_tree_init(cmp_int, free_val, dont_free);
     int flag = 1;
     for(int i=0; i<100000; i++){
