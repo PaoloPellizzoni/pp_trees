@@ -38,7 +38,7 @@ int main(int argc, char** argv){
                 else if (optopt == 'p')
                     fprintf (stderr, "Option -p requires a string argument\n");
                 else
-                    fprintf (stderr, "Unknown argument\n", optopt);
+                    fprintf (stderr, "Unknown argument\n");
                 exit(EXIT_FAILURE);
                 break;
             default:
