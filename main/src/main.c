@@ -58,6 +58,7 @@ int main(int argc, char** argv){
             printf("Test avl remove: %d\n",test_avl_strings_removeall(filename));
             printf("Test segment basic: %d\n",test_segment_basic(filename));
             printf("Test segment pote: %d\n",test_segment_potentiometer(filename));
+            break;
         case 1:
             printf("Test avl random: %d\n", test_avl_random(filename));
             break;

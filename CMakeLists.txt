@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.0)
 #set custom install path
 message(STATUS "Setting default CMAKE_INSTALL_PREFIX path to ${CMAKE_BINARY_DIR}/install")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/../install" CACHE STRING "The path to use for make install" FORCE)
+if(UNIX)
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif(UNIX)
 
 # Project name
 project(pp_trees)

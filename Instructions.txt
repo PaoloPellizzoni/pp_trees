@@ -1,0 +1,30 @@
+
+############# Linux ##################
+
+Note that on some Linux distributions apt does not provide a recent CMake release.
+This project requires CMake 3.17 or newer. Download the latest release from the official
+site and extract the archive. The run the following commands in the extracted folder:
+./configure
+make
+sudo make install
+
+
+The root folder of the project is pp_trees/, in this directory create a new one with
+mkdir build && cd build
+Then run the following commands to install the software:
+cmake ..
+cmake --build .
+cmake --install .
+
+The executable will be in pp_trees/install/bin
+
+
+############# Windows ##################
+The root folder of the project is pp_trees/, in this directory create a new one with
+mkdir build && cd build
+Then run the following commands to install the software (for MinGW gcc compiler):
+cmake -G "MinGW Makefiles" ..
+cmake --build .
+cmake --install .
+
+The executable will be in pp_trees/install/bin

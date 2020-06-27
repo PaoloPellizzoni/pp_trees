@@ -171,7 +171,7 @@ int test_avl_random(char* filename){
             int sol;
             fscanf(solution, "%d", &sol);
             if(val!=sol){
-                fprintf(stderr, "Error : %s %s \n", val, sol);
+                fprintf(stderr, "Error : %d %d \n", val, sol);
                 flag = 0;
             }
             free(key);
@@ -194,24 +194,24 @@ int test_segment_basic(char* filename){
     int val;
     val = segment_node_sum(root, 0, 10);
     if(val != 4){
-        fprintf(stderr, "Error : %s %s \n", val, 4);
+        fprintf(stderr, "Error : %d %d \n", val, 4);
         flag = 0;
     }
     val = segment_node_sum(root, 0, 3);
     if(val != 1){
-        fprintf(stderr, "Error : %s %s \n", val, 1);
+        fprintf(stderr, "Error : %d %d \n", val, 1);
         flag = 0;
     }
     segment_node_update(root, 0, 1, +4); //point update
     val = segment_node_sum(root, 0, 3);
     if(val != 5){
-        fprintf(stderr, "Error : %s %s \n", val, 5);
+        fprintf(stderr, "Error : %d %d \n", val, 5);
         flag = 0;
     }
     segment_node_update(root, 1, 6, +1); //range update
     val = segment_node_sum(root, 0, 3);
     if(val != 7){
-        fprintf(stderr, "Error : %s %s \n", val, 7);
+        fprintf(stderr, "Error : %d %d \n", val, 7);
         flag = 0;
     }
 
