@@ -1,5 +1,4 @@
-#include "pp_avl/pp_avl_tree.h"
-#include "pp_avl/pp_avl_node.h"
+#include "avl/pp_avl_tree.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -9,8 +8,10 @@
  */
 avl_tree_t* avl_tree_init(comparator_func cmpf, deleter_func del_key, deleter_func del_val){
     avl_tree_t* tree = calloc(1, sizeof(avl_tree_t));
-    if(!tree) return NULL;
-
+    if(!tree) {
+        fprintf(stderr, "Failed allocation\n");
+        exit(EXIT_FAILURE);
+    }
     tree->root = NULL;
     tree->cmpf = cmpf;
     tree->del_key = del_key;
@@ -62,8 +63,6 @@ int avl_tree_put(avl_tree_t* self, void* key, void* val){
     avl_node_t* node = avl_node_get(self->root, key, self->cmpf);
     if(!node){
         self->root = avl_node_insert(self->root, key, val, self->cmpf);
-        if(!self->root)
-            printf("Insertion failed!\n" );
         return 1;
     }
     else{

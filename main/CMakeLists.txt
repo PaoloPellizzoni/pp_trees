@@ -6,6 +6,7 @@ project(main)
 add_executable(main
     src/main.c
     src/utils.c
+    src/tests.c
 )
 
 target_include_directories( main
@@ -14,4 +15,5 @@ target_include_directories( main
 
 target_link_libraries(main LINK_PUBLIC
     avl
+    lazy_segment
 )

@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SIZE 64
-
 int cmp_int(const void* a, const void* b){
     return *(int*)a - *(int*)b;
 }
@@ -36,7 +34,10 @@ char* get_string(FILE* file){
     fscanf(file, "%64s", buf);
     //while(getchar()!='\n');
     char* s = calloc(1, strlen(buf)+1);
-    if(!s) return NULL;
+    if(!s){
+        fprintf(stderr, "Failed allocation\n");
+        exit(EXIT_FAILURE);
+    }
     memcpy(s, buf, strlen(buf)+1);
     return s;
 }

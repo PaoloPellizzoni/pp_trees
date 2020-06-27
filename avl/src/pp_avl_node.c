@@ -1,4 +1,4 @@
-#include "pp_avl/pp_avl_node.h"
+#include "avl/pp_avl_node.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -9,8 +9,10 @@
  */
 avl_node_t* avl_node_init(void* key, void* val){
     avl_node_t* node = calloc(1, sizeof(avl_node_t));
-    if(!node) return NULL;
-
+    if(!node) {
+        fprintf(stderr, "Failed allocation\n");
+        exit(EXIT_FAILURE);
+    }
     node->left = NULL;
     node->right = NULL;
     node->key = key;

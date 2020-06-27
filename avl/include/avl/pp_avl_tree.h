@@ -1,7 +1,7 @@
 #ifndef PP_AVL_TREE_H_
 #define PP_AVL_TREE_H_
 
-#include "pp_avl/pp_avl_node.h"
+#include "avl/pp_avl_node.h"
 
 struct avl_tree
 {

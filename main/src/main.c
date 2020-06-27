@@ -1,126 +1,85 @@
-#include "main/utils.h"
-#include "pp_avl/pp_avl_tree.h"
+#include "main/tests.h"
+
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
-#define DATA_DIR "../data/"
+const int N_OF_TESTS = 5;
 
-int test_avl_strings(){
-    FILE* in = fopen(DATA_DIR"in3.txt", "r");
-    FILE* out = fopen(DATA_DIR"out3.txt", "r");
-    avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val);
-    int n;
-    int flag = 1;
-    fscanf(in, "%d", &n);
-    for(int i=0; i<n; i++){
-        char* val = get_string(in);
-        char* key = get_string(in);
-        avl_tree_put(map, key, val);
-    }
-    fscanf(in, "%d", &n);
-    for(int i=0; i<n; i++){
-        char* key = get_string(in);
-        char* sol = get_string(out);
-        char* val = avl_tree_get(map, key);
-        if((!val && strcmp(sol, "eh")!=0) || (val && strcmp(sol, val)!= 0)){
-            printf("Error : %s %s \n", val, sol);
-            flag = 0;
-        }
-        else{
-            //printf("%s\n", val);
-        }
-        free(key);
-        free(sol);
-    }
+int main(int argc, char** argv){
+    int opt;
+    char* tmp;
+    int t = -1; //test number
+    int p = 0; //print to file
+    char filename[65];
+    memset(filename, 0, sizeof(filename));
+    while((opt = getopt(argc, argv, "t:p:")) != -1){
+        switch (opt) {
+            case 't':
+                tmp = optarg;
+                char* check = NULL;
+                t = strtol(tmp, &check, 10);
+                if(tmp == check){
+                    fprintf (stderr, "Option -t requires an integer argument\n");
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'p':
+                p = 1;
+                tmp = optarg;
+                strncpy(filename, tmp, 64);
 
-    avl_tree_free(map);
-    fclose(in);
-    fclose(out);
-    return flag;
-}
+                break;
+            case '?':
+                if (optopt == 't')
+                    fprintf (stderr, "Option -t requires an integer argument\n");
+                else if (optopt == 'p')
+                    fprintf (stderr, "Option -p requires a string argument\n");
+                else
+                    fprintf (stderr, "Unknown argument\n", optopt);
+                exit(EXIT_FAILURE);
+                break;
+            default:
+                exit(EXIT_FAILURE);
 
-int test_avl_strings_removeall(){
-    FILE* in = fopen(DATA_DIR"in3.txt", "r");
-    FILE* out = fopen(DATA_DIR"out3.txt", "r");
-    avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val);
-    int n;
-    int flag = 1;
-    fscanf(in, "%d", &n);
-    for(int i=0; i<n; i++){
-        char* val = get_string(in);
-        char* key = get_string(in);
-        avl_tree_put(map, key, val);
-    }
-    fscanf(in, "%d", &n);
-    for(int i=0; i<n; i++){
-        char* key = get_string(in);
-        char* sol = get_string(out);
-        char* val = avl_tree_get(map, key);
-        if((!val && strcmp(sol, "eh")!=0) || (val && strcmp(sol, val)!= 0)){
-            printf("Error : %s %s \n", val, sol);
-            flag = 0;
-        }
-        else{
-            //printf("%s\n", val);
-        }
-        free(key);
-        free(sol);
-    }
-    void* to_remove = NULL;
-    while( to_remove = avl_tree_find_by_order(map, 0) ){
-        avl_tree_remove(map, to_remove);
-    }
-    free(map);
-
-    fclose(in);
-    fclose(out);
-    return flag;
-}
-
-
-int test_avl_random(){
-    FILE* in = fopen(DATA_DIR"in1.txt", "r");
-    FILE* out = fopen(DATA_DIR"out1.txt", "r");
-    avl_tree_t* map = avl_tree_init(cmp_int, free_val, dont_free);
-    int flag = 1;
-    for(int i=0; i<100000; i++){
-        int q, k;
-        fscanf(in, "%d %d", &q, &k);
-        int* key = malloc(sizeof(int));
-
-        memcpy(key, &k, sizeof(int));
-        if(q == 0){
-            if(avl_tree_contains(map, key) == 0){
-                //we need only a set, so don't store any value
-                avl_tree_put(map, key, NULL);
-            }
-            else{
-                avl_tree_remove(map, key);
-                free(key);
-            }
-        }
-        else{
-            int sol = avl_tree_contains(map, key);
-            int tmp;
-            fscanf(out, "%d", &tmp);
-            if(tmp!=sol){
-                printf("%d: %d %d ERROR!\n",k, sol, tmp);
-                flag = 0;
-            }
-            free(key);
         }
     }
-    fclose(in);
-    fclose(out);
-    avl_tree_free(map);
-    return flag;
-}
-
-int main(){
+    if(t < 0 || t > N_OF_TESTS){
+        fprintf (stderr, "Test number must be in range 0 - %d\n", N_OF_TESTS);
+        exit(EXIT_FAILURE);
+    }
     printf("Starting tests:\n");
-    printf("Test random: %d\n", test_avl_random());
-    printf("Test strings: %d\n",test_avl_strings());
-    printf("Test remove: %d\n",test_avl_strings());
+    switch (t) {
+        case 0:
+            printf("Test avl random: %d\n", test_avl_random(filename));
+            printf("Test avl strings: %d\n",test_avl_babel(filename));
+            printf("Test avl remove: %d\n",test_avl_strings_removeall(filename));
+            printf("Test segment basic: %d\n",test_segment_basic(filename));
+            printf("Test segment pote: %d\n",test_segment_potentiometer(filename));
+        case 1:
+            printf("Test avl random: %d\n", test_avl_random(filename));
+            break;
+        case 2:
+            printf("Test avl strings: %d\n",test_avl_babel(filename));
+            break;
+        case 3:
+            printf("Test avl remove: %d\n",test_avl_strings_removeall(filename));
+            break;
+        case 4:
+            printf("Test segment basic: %d\n",test_segment_basic(filename));
+            break;
+        case 5:
+            printf("Test segment pote: %d\n",test_segment_potentiometer(filename));
+            break;
+        default:
+            exit(EXIT_FAILURE);
+    }
+
+
+
+
+
+
 }
