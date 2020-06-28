@@ -53,10 +53,6 @@ void dont_free(void* s){
         It is used to allocate keys as stack-allocated strings could be deleted after being inserted in the map.
  */
 char* get_string(FILE* file){
-    if(rand()%100 > 75){
-        fprintf(stderr, "Failed allocation\n");
-        return NULL;
-    }
     char buf[65];
     memset(buf, 0, sizeof(buf));
     fscanf(file, "%64s", buf);

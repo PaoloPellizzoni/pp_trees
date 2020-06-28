@@ -1,5 +1,4 @@
 #include "main/tests.h"
-
 #include "main/utils.h"
 
 #include <stdio.h>
@@ -7,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 const int N_OF_TESTS = 5;
 
@@ -53,29 +53,42 @@ int main(int argc, char** argv){
         fprintf (stderr, "Test number must be in range 0 - %d. Set it with -t\n", N_OF_TESTS);
         exit(EXIT_FAILURE);
     }
+    char pre[70];
     printf("Starting tests:\n");
+    clock_t start_time = clock();
     switch (t) {
         case 0:
-            printf("Test avl random: %d\n", test_avl_random(filename));
-            printf("Test avl strings: %d\n",test_avl_babel(filename));
-            printf("Test avl remove: %d\n",test_avl_strings_removeall(filename));
-            printf("Test segment basic: %d\n",test_segment_basic(filename));
-            printf("Test segment pote: %d\n",test_segment_potentiometer(filename));
+            strcpy(pre, "1_");
+            printf("Test avl random: %s\n", test_avl_random( filename[0] ? strcat(pre, filename) : filename) ? "SUCCESS" : "FAIL");
+            strcpy(pre, "2_");
+            printf("Test avl strings: %s\n",test_avl_babel(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
+            strcpy(pre, "3_");
+            printf("Test avl remove: %s\n",test_avl_strings_removeall(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
+            strcpy(pre, "4_");
+            printf("Test segment basic: %s\n",test_segment_basic(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
+            strcpy(pre, "5_");
+            printf("Test segment pote: %s\n",test_segment_potentiometer(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
+            printf("Tests took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         case 1:
-            printf("Test avl random: %d\n", test_avl_random(filename));
+            printf("Test avl random: %s\n", test_avl_random(filename)? "SUCCESS" : "FAIL");
+            printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         case 2:
-            printf("Test avl strings: %d\n",test_avl_babel(filename));
+            printf("Test avl strings: %s\n",test_avl_babel(filename)? "SUCCESS" : "FAIL");
+            printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         case 3:
-            printf("Test avl remove: %d\n",test_avl_strings_removeall(filename));
+            printf("Test avl remove: %s\n",test_avl_strings_removeall(filename)? "SUCCESS" : "FAIL");
+            printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         case 4:
-            printf("Test segment tree basic: %d\n",test_segment_basic(filename));
+            printf("Test segment tree basic: %s\n",test_segment_basic(filename)? "SUCCESS" : "FAIL");
+            printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         case 5:
-            printf("Test segment tree potentiometer: %d\n",test_segment_potentiometer(filename));
+            printf("Test segment tree potentiometer: %s\n",test_segment_potentiometer(filename)? "SUCCESS" : "FAIL");
+            printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         default:
             exit(EXIT_FAILURE);

@@ -286,7 +286,7 @@ avl_node_t* avl_node_get_first(avl_node_t* node){
 
 /**
  * @param node: the root of the subtree to be searched
- * @returns the node with the smallest key in the subtree
+ * @returns the node with the largest key in the subtree
  */
 avl_node_t* avl_node_get_last(avl_node_t* node){
     while(node->right) node = node->right;

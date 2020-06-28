@@ -262,7 +262,7 @@ int test_avl_strings_removeall(char* filename){
  * @brief This function tests the avl tree against a simple handmade problemset.
         The main aim of this function is to test the order statistics functions.
         This function does not take any input nor creates an output.
- *
+ *  This function is for debug purposes only, it is not memory-safe
 void test_avl_order_statistics(char* filename){
     int flag = 1;
     avl_tree_t* tree = avl_tree_init(cmp_int, NULL, NULL);
