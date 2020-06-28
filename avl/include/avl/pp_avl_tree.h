@@ -1,6 +1,8 @@
 #ifndef PP_AVL_TREE_H_
 #define PP_AVL_TREE_H_
 
+#define AVL_BAD_ALLOC 2
+
 #include "avl/pp_avl_node.h"
 
 struct avl_tree

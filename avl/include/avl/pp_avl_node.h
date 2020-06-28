@@ -21,7 +21,7 @@ struct avl_node
 avl_node_t* avl_node_init(void* key, void* val);
 void avl_node_free(avl_node_t* node, deleter_func delete_key, deleter_func delete_val);
 avl_node_t* avl_node_get(avl_node_t* node, void* key, comparator_func cmpf);
-avl_node_t* avl_node_insert(avl_node_t* node, void* key, void* val, comparator_func cmpf);
+avl_node_t* avl_node_insert(avl_node_t* node, void* key, void* val, comparator_func cmpf, deleter_func del_key, deleter_func del_val);
 avl_node_t* avl_node_get_first(avl_node_t* node);
 avl_node_t* avl_node_get_last(avl_node_t* node);
 avl_node_t* avl_node_remove(avl_node_t* node, void* key, comparator_func cmpf, deleter_func delete_key, deleter_func delete_val);

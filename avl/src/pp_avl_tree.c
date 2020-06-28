@@ -10,7 +10,7 @@ avl_tree_t* avl_tree_init(comparator_func cmpf, deleter_func del_key, deleter_fu
     avl_tree_t* tree = calloc(1, sizeof(avl_tree_t));
     if(!tree) {
         fprintf(stderr, "Failed allocation\n");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     tree->root = NULL;
     tree->cmpf = cmpf;
@@ -26,8 +26,11 @@ avl_tree_t* avl_tree_init(comparator_func cmpf, deleter_func del_key, deleter_fu
  * @brief frees the entire map
  */
 void avl_tree_free(avl_tree_t* self){
-    avl_node_free(self->root, self->del_key, self->del_val);
-    free(self);
+    if(self){
+        if(self->root)
+            avl_node_free(self->root, self->del_key, self->del_val);
+        free(self);
+    }
 }
 
 /**
@@ -56,13 +59,15 @@ int avl_tree_contains(avl_tree_t* self, void* key){
  * @param self: a pointer to the map
  * @param key: the key to be inserted
  * @param key: the value associated to the key
- * @returns true if the insertion created a new node, or false if the insertion updated an already existing one.
+ * @returns 1 if the insertion created a new node, 0 if the insertion updated an already existing one or AVL_BAD_ALLOC if the program ran out of memory.
  * Note that the update process frees the memory of the older value to avoid memory leaks, so be sure store a pointer to a pointer if you don't want it to be freed.
  */
 int avl_tree_put(avl_tree_t* self, void* key, void* val){
     avl_node_t* node = avl_node_get(self->root, key, self->cmpf);
     if(!node){
-        self->root = avl_node_insert(self->root, key, val, self->cmpf);
+        self->root = avl_node_insert(self->root, key, val, self->cmpf, self->del_key, self->del_val);
+        if(!self->root)
+            return AVL_BAD_ALLOC;       // already freed the whole tree structure
         return 1;
     }
     else{

@@ -5,21 +5,21 @@
 /**
  * @param key: the key of the new node
  * @param val: the value of the new node
- * @returns a pointer to the newly created node, or NULL if the allocation failed.
+ * @returns a pointer to the newly created node.
  */
 avl_node_t* avl_node_init(void* key, void* val){
     avl_node_t* node = calloc(1, sizeof(avl_node_t));
     if(!node) {
         fprintf(stderr, "Failed allocation\n");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
-    node->left = NULL;
-    node->right = NULL;
-    node->key = key;
-    node->val = val;
-    node->balance_factor = 0;
-    node->height = 0;
-    node->subtree_size = 1;
+    node->left = NULL;      // this is the left subtree
+    node->right = NULL;     // this is the right subtree
+    node->key = key;        // this is the key pointer
+    node->val = val;        // this is the value pointer
+    node->balance_factor = 0; // the difference between the left subtree height and the right one
+    node->height = 0;       // the height of the subtree
+    node->subtree_size = 1; // the size of this subtree
     return node;
 }
 
@@ -31,8 +31,8 @@ avl_node_t* avl_node_init(void* key, void* val){
  */
 void avl_node_free(avl_node_t* node, deleter_func delete_key, deleter_func delete_val){
     if(!node) return;
-    avl_node_free(node->left, delete_key, delete_val);
-    avl_node_free(node->right, delete_key, delete_val);
+    avl_node_free(node->left, delete_key, delete_val); //recur left
+    avl_node_free(node->right, delete_key, delete_val);//recur right
 
     if(delete_key)
         delete_key(node->key);
@@ -49,12 +49,12 @@ void avl_node_free(avl_node_t* node, deleter_func delete_key, deleter_func delet
  * @returns a pointer to the requested node if present, or NULL otherwise.
  */
 avl_node_t* avl_node_get(avl_node_t* node, void* key, comparator_func cmpf){
-    if(!node) return NULL;
+    if(!node) return NULL;          // key not found
     int cmp = cmpf(key, node->key);
     if(cmp < 0)
-        return avl_node_get(node->left, key, cmpf);
+        return avl_node_get(node->left, key, cmpf); // recur left
     if(cmp > 0)
-        return avl_node_get(node->right, key, cmpf);
+        return avl_node_get(node->right, key, cmpf);// recur right
     return node;
 }
 
@@ -65,11 +65,12 @@ avl_node_t* avl_node_get(avl_node_t* node, void* key, comparator_func cmpf){
  * @returns the 0-indexed order of the key in the subtree
  */
 int avl_node_order_of_key(avl_node_t* node, void* key, comparator_func cmpf){
-    if(!node) return -1;
+    if(!node) return -1;    // can't find the key
     int order = 0;
     while(1){
         int cmp = cmpf(key, node->key);
         if(cmp == 0){
+            // the oreder oh the key in the subtree is the size of the left subtree of its root
             return order + (node->left ? node->left->subtree_size : 0);
         }
         else if(cmp < 0){
@@ -77,9 +78,9 @@ int avl_node_order_of_key(avl_node_t* node, void* key, comparator_func cmpf){
             if(!node) return -1;
         }
         else{
+            order += 1+(node->left ? node->left->subtree_size : 0);
             node = node->right;
             if(!node) return -1;
-            order += 1+(node->left ? node->left->subtree_size : 0);
         }
     }
 }
@@ -93,18 +94,19 @@ int avl_node_order_of_key(avl_node_t* node, void* key, comparator_func cmpf){
 avl_node_t* avl_node_find_by_order(avl_node_t* node, int order, comparator_func cmpf){
     if(!node) return NULL;
     while(1){
+        // the oreder oh the key in the subtree is the size of the left subtree of its root
         int pos = (node->left ? node->left->subtree_size : 0);
-        //printf("%d %d\n", node->key, pos);
-        if(pos == order)
+        if(pos == order) // found
             break;
         else if(pos < order){
             if(node->right == NULL) return NULL;
             node = node->right;
+            // to recur in the right subtree we decrease the order
             order -= pos+1;
         }
         else{
             if(node->left == NULL) return NULL;
-            node = node->left;
+            node = node->left; // just recur left
         }
     }
     return node;
@@ -117,11 +119,11 @@ avl_node_t* avl_node_find_by_order(avl_node_t* node, int order, comparator_func 
 void avl_node_update(avl_node_t* node){
     int leftHeight = (!node->left) ? -1 : node->left->height;
     int rightHeight = (!node->right) ? -1 : node->right->height;
-    node->height = 1 + ((leftHeight > rightHeight) ? leftHeight : rightHeight);
-    node->balance_factor = rightHeight - leftHeight;
+    node->height = 1 + ((leftHeight > rightHeight) ? leftHeight : rightHeight); // compute this node's height
+    node->balance_factor = rightHeight - leftHeight;                            // and its balance factor
     int leftSize = (!node->left) ? 0 : node->left->subtree_size;
     int rightSize = (!node->right) ? 0 : node->right->subtree_size;
-    node->subtree_size = 1 + leftSize + rightSize;
+    node->subtree_size = 1 + leftSize + rightSize;                              // and its subtree size
 }
 
 
@@ -250,18 +252,27 @@ avl_node_t* avl_node_balance(avl_node_t* node){
  * @returns the new root of the balanced subtree
  * @brief Balances a subtree to make sure that for each node its left and right subtrees heights differ by at most 1.
  */
-avl_node_t* avl_node_insert(avl_node_t* node, void* key, void* val, comparator_func cmpf){
-    if(!node) return avl_node_init(key, val);
+avl_node_t* avl_node_insert(avl_node_t* node, void* key, void* val, comparator_func cmpf, deleter_func del_key, deleter_func del_val){
+    if(!node) return avl_node_init(key, val); // this is a leaf, create a new node
 
     int cmp = cmpf(key, node->key);
-    if(cmp < 0)
-        node->left = avl_node_insert(node->left, key, val, cmpf);
-    else
-        node->right = avl_node_insert(node->right, key, val, cmpf);
+    if(cmp < 0){
+        node->left = avl_node_insert(node->left, key, val, cmpf, del_key, del_val); // recur left and update the node...
+        if(!node->left){            // failed allocation
+            avl_node_free(node, del_key, del_val);    // free the subtree and tell parent
+            return NULL;
+        }
+    }
+    else{
+        node->right = avl_node_insert(node->right, key, val, cmpf, del_key, del_val);// recur right and update the node...
+        if(!node->right){           // failed allocation
+            avl_node_free(node, del_key, del_val);    // free the subtree and tell parent
+            return NULL;
+        }
+    }
+    avl_node_update(node); // ...and update its values...
 
-    avl_node_update(node);
-
-    return avl_node_balance(node);
+    return avl_node_balance(node); // ...and rebalance the tree
 }
 
 /**
@@ -308,33 +319,33 @@ avl_node_t* avl_node_remove(avl_node_t* node, void* key, comparator_func cmpf, d
 
         if((node->left == NULL) || (node->right == NULL)){
             avl_node_t* tmp = node->left ? node->left : node->right;
-            if(!tmp){ //leaf
+            if(!tmp){   // this node is a leaf
                 tmp = node;
                 node = NULL;
             }
-            else{
+            else{       // only one child
                 *node = *tmp; //swap nodes
             }
             free(tmp); // remove the node
         }
         else{
             if(node->left->height > node->right->height){
-                avl_node_t* tmp = avl_node_get_last(node->left);
+                avl_node_t* tmp = avl_node_get_last(node->left); // swap this node with its predeccessor
                 node->key = tmp->key;
                 node->val = tmp->val;
-                node->left = avl_node_remove(node->left, tmp->key, cmpf, NULL, NULL); //already freed key and val
+                node->left = avl_node_remove(node->left, tmp->key, cmpf, NULL, NULL); // remove the predecessor, already freed key and val
             }
             else{
-                avl_node_t* tmp = avl_node_get_first(node->right);
+                avl_node_t* tmp = avl_node_get_first(node->right); // swap this node with its successor
                 node->key = tmp->key;
                 node->val = tmp->val;
-                node->right = avl_node_remove(node->right, tmp->key, cmpf, NULL, NULL); //already freed key and val
+                node->right = avl_node_remove(node->right, tmp->key, cmpf, NULL, NULL); //remove the successor, already freed key and val
             }
         }
     }
 
-    if(!node) return NULL;
-
+    if(!node) return NULL; // no need to balance
+    // update the node values and balance its subtree
     avl_node_update(node);
     return avl_node_balance(node);
 }
@@ -342,10 +353,11 @@ avl_node_t* avl_node_remove(avl_node_t* node, void* key, comparator_func cmpf, d
 
 /**
  * @param node: the root of the subtree to be traversed
- * @brief Prints the preorder traversal of the subtree
+ * @brief Prints the preorder traversal of the subtree.
+    this is  for debug only
 void avl_node_preorder(avl_node_t* node){
     if(node){
-        printf("%d ", (node->key) );
+        printf("%d ", (*((int*)(node->key))) );
         avl_node_preorder(node->left);
         avl_node_preorder(node->right);
     }

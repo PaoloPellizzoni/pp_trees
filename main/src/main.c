@@ -1,5 +1,7 @@
 #include "main/tests.h"
 
+#include "main/utils.h"
+
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -15,6 +17,7 @@ int main(int argc, char** argv){
     int p = 0; //print to file
     char filename[65];
     memset(filename, 0, sizeof(filename));
+    // standard getopt routine
     while((opt = getopt(argc, argv, "t:p:")) != -1){
         switch (opt) {
             case 't':
@@ -47,7 +50,7 @@ int main(int argc, char** argv){
         }
     }
     if(t < 0 || t > N_OF_TESTS){
-        fprintf (stderr, "Test number must be in range 0 - %d\n", N_OF_TESTS);
+        fprintf (stderr, "Test number must be in range 0 - %d. Set it with -t\n", N_OF_TESTS);
         exit(EXIT_FAILURE);
     }
     printf("Starting tests:\n");
@@ -69,10 +72,10 @@ int main(int argc, char** argv){
             printf("Test avl remove: %d\n",test_avl_strings_removeall(filename));
             break;
         case 4:
-            printf("Test segment basic: %d\n",test_segment_basic(filename));
+            printf("Test segment tree basic: %d\n",test_segment_basic(filename));
             break;
         case 5:
-            printf("Test segment pote: %d\n",test_segment_potentiometer(filename));
+            printf("Test segment tree potentiometer: %d\n",test_segment_potentiometer(filename));
             break;
         default:
             exit(EXIT_FAILURE);
