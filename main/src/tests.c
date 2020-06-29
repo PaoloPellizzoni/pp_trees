@@ -15,19 +15,22 @@ int test_avl_random(char* filename){
     FILE* input = fopen(DATA_DIR"in1.txt", "r");    //this is the input file
     if(!input){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        return 0;
     }
     FILE* solution = fopen(DATA_DIR"out1.txt", "r"); //this is the solution file
     if(!solution){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        fclose(input);
+        return 0;
     }
     FILE* output;
     if(filename[0]){
         output = fopen(filename, "w");              //this is the output file, is filename exists
         if(!output){
             fprintf(stderr, "Can't create file %s\n", filename);
-            exit(EXIT_FAILURE);
+            fclose(input);
+            fclose(output);
+            return 0;
         }
     }
     avl_tree_t* map = avl_tree_init(cmp_int, free_val, dont_free); //set appropriate deleter functions
@@ -39,6 +42,10 @@ int test_avl_random(char* filename){
         if(!key){
             fprintf(stderr, "Failed allocation\n");
             avl_tree_free(map);         // free memory before exiting
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         memcpy(key, &k, sizeof(int));
@@ -49,6 +56,10 @@ int test_avl_random(char* filename){
                 if(chk == AVL_BAD_ALLOC){       // insertion failed
                     free(key);
                     avl_tree_free(map);         // free memory before exiting
+                    fclose(input);
+                    fclose(solution);
+                    if(filename[0])
+                        fclose(output);
                     exit(EXIT_FAILURE);
                 }
             }
@@ -89,19 +100,22 @@ int test_avl_babel(char* filename){
     FILE* input = fopen(DATA_DIR"in2.txt", "r");    //this is the input file
     if(!input){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        return 0;
     }
     FILE* solution = fopen(DATA_DIR"out2.txt", "r"); //this is the solution file
     if(!solution){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        fclose(input);
+        return 0;
     }
     FILE* output;
     if(filename[0]){
         output = fopen(filename, "w");              //this is the output file
         if(!output){
             fprintf(stderr, "Can't create file %s\n", filename);
-            exit(EXIT_FAILURE);
+            fclose(input);
+            fclose(solution);
+            return 0;
         }
     }
     avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val); // set appropriate deleter functions
@@ -112,12 +126,20 @@ int test_avl_babel(char* filename){
         char* val = get_string(input);
         if(!val){
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         char* key = get_string(input);
         if(!key){
             free(val);
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         int chk = avl_tree_put(map, key, val);
@@ -125,6 +147,10 @@ int test_avl_babel(char* filename){
             free(val);
             free(key);
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
     }
@@ -133,12 +159,20 @@ int test_avl_babel(char* filename){
         char* key = get_string(input);
         if(!key){
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         char* sol = get_string(solution); // read what the solution should be
         if(!sol){
             free(key);
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         char* val = avl_tree_get(map, key);
@@ -173,22 +207,25 @@ int test_avl_babel(char* filename){
  */
  // this function is almost the same as the one above, for comments on the code please consult the aforementioned one.
 int test_avl_strings_removeall(char* filename){
-    FILE* input = fopen(DATA_DIR"in2.txt", "r");
+    FILE* input = fopen(DATA_DIR"in2.txt", "r");    //this is the input file
     if(!input){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        return 0;
     }
-    FILE* solution = fopen(DATA_DIR"out2.txt", "r");
+    FILE* solution = fopen(DATA_DIR"out2.txt", "r"); //this is the solution file
     if(!solution){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        fclose(input);
+        return 0;
     }
     FILE* output;
     if(filename[0]){
-        output = fopen(filename, "w");
+        output = fopen(filename, "w");              //this is the output file
         if(!output){
             fprintf(stderr, "Can't create file %s\n", filename);
-            exit(EXIT_FAILURE);
+            fclose(input);
+            fclose(solution);
+            return 0;
         }
     }
     avl_tree_t* map = avl_tree_init(cmp_string, free_val, free_val);
@@ -199,12 +236,20 @@ int test_avl_strings_removeall(char* filename){
         char* val = get_string(input);
         if(!val){
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         char* key = get_string(input);
         if(!key){
             free(val);
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         int chk = avl_tree_put(map, key, val);
@@ -212,6 +257,10 @@ int test_avl_strings_removeall(char* filename){
             free(val);
             free(key);
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
     }
@@ -220,12 +269,20 @@ int test_avl_strings_removeall(char* filename){
         char* key = get_string(input);
         if(!key){
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         char* sol = get_string(solution); // read what the solution should be
         if(!sol){
             free(key);
             avl_tree_free(map);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
         char* val = avl_tree_get(map, key);
@@ -390,6 +447,7 @@ int test_segment_potentiometer(char* filename){
     FILE* solution = fopen(DATA_DIR"out3.txt", "r");
     if(!solution){
         fprintf(stderr, "Missing file\n");
+        fclose(input);
         exit(EXIT_FAILURE);
     }
     FILE* output;
@@ -397,6 +455,8 @@ int test_segment_potentiometer(char* filename){
         output = fopen(filename, "w");
         if(!output){
             fprintf(stderr, "Can't create file %s\n", filename);
+            fclose(input);
+            fclose(solution);
             exit(EXIT_FAILURE);
         }
     }
@@ -409,6 +469,10 @@ int test_segment_potentiometer(char* filename){
         int* a = calloc(n, sizeof(int));
         if(!a){
             fprintf(stderr, "Failed allocation\n");
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
 
@@ -418,6 +482,10 @@ int test_segment_potentiometer(char* filename){
         segment_node_t* root = segment_node_init(a, 0, n);
         if(!root){
             free(a);
+            fclose(input);
+            fclose(solution);
+            if(filename[0])
+                fclose(output);
             exit(EXIT_FAILURE);
         }
 
