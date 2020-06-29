@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <time.h>
 
-const int N_OF_TESTS = 5;
+const int N_OF_TESTS = 6;
 
 int main(int argc, char** argv){
     int opt;
@@ -65,8 +65,10 @@ int main(int argc, char** argv){
             strcpy(pre, "3_");
             printf("Test avl remove: %s\n",test_avl_strings_removeall(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
             strcpy(pre, "4_");
-            printf("Test segment basic: %s\n",test_segment_basic(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
+            printf("Test avl order statistics: %s\n", test_avl_order_statistics( filename[0] ? strcat(pre, filename) : filename) ? "SUCCESS" : "FAIL");
             strcpy(pre, "5_");
+            printf("Test segment basic: %s\n",test_segment_basic(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
+            strcpy(pre, "6_");
             printf("Test segment pote: %s\n",test_segment_potentiometer(filename[0] ? strcat(pre, filename) : filename)? "SUCCESS" : "FAIL");
             printf("Tests took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
@@ -83,10 +85,13 @@ int main(int argc, char** argv){
             printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
         case 4:
+            printf("Test avl order statistics: %s\n",test_avl_order_statistics(filename)? "SUCCESS" : "FAIL");
+            printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
+        case 5:
             printf("Test segment tree basic: %s\n",test_segment_basic(filename)? "SUCCESS" : "FAIL");
             printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;
-        case 5:
+        case 6:
             printf("Test segment tree potentiometer: %s\n",test_segment_potentiometer(filename)? "SUCCESS" : "FAIL");
             printf("Test took %2.6f seconds\n", (double)(clock() - start_time) / CLOCKS_PER_SEC);
             break;

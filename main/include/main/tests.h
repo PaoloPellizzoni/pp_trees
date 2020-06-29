@@ -9,6 +9,7 @@
 int test_avl_babel();
 int test_avl_strings_removeall();
 int test_avl_random();
+int test_avl_order_statistics();
 
 int test_segment_basic();
 int test_segment_potentiometer();
