@@ -303,7 +303,7 @@ int test_avl_strings_removeall(char* filename){
             fprintf(output, "Removing key %s\n", (char*)to_remove);
         avl_tree_remove(map, to_remove);
     }
-    free(map);
+    free(map);  //free without using ad-hoc function, nodes memory should already be free
 
     fclose(input);
     fclose(solution);
@@ -480,7 +480,7 @@ int test_segment_potentiometer(char* filename){
             fscanf(input, "%d", &a[i]);
 
         segment_node_t* root = segment_node_init(a, 0, n);
-        if(!root){
+        if(!root){             //failed allocation
             free(a);
             fclose(input);
             fclose(solution);

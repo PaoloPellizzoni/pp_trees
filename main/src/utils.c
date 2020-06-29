@@ -21,12 +21,12 @@ int cmp_string(const void* a, const void* b){
     char* _b = (char*)b;
     int i = 0;
     while(_a[i] && _b[i]){
-        if(_a[i] < _b[i]) return 1;
-        if(_a[i] > _b[i]) return -1;
+        if(_a[i] < _b[i]) return -1;
+        if(_a[i] > _b[i]) return 1;
         i++;
     }
     if(_a[i] == _b[i]) return 0;
-    return _b[i] ? 1 : -1;
+    return _b[i] ? -1 : 1;
 }
 
 /**
