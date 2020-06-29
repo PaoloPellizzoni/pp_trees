@@ -442,11 +442,7 @@ int test_segment_potentiometer(char* filename){
     FILE* input = fopen(DATA_DIR"in3.txt", "r");
     if(!input){
         fprintf(stderr, "Missing file\n");
-<<<<<<< HEAD
         return 0;
-=======
-        retun 0;
->>>>>>> c8521617a9398b37f52c5e2a64585c460741c097
     }
     FILE* solution = fopen(DATA_DIR"out3.txt", "r");
     if(!solution){
