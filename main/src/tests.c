@@ -362,7 +362,7 @@ int test_avl_order_statistics(char* filename){
     }
 
     avl_tree_free(tree);
-    for(int i = 0; i < 8; i++)
+    for(int i = 0; i < 9; i++)
         free(p[i]);
     free(p);
 
@@ -442,13 +442,13 @@ int test_segment_potentiometer(char* filename){
     FILE* input = fopen(DATA_DIR"in3.txt", "r");
     if(!input){
         fprintf(stderr, "Missing file\n");
-        exit(EXIT_FAILURE);
+        retun 0;
     }
     FILE* solution = fopen(DATA_DIR"out3.txt", "r");
     if(!solution){
         fprintf(stderr, "Missing file\n");
         fclose(input);
-        exit(EXIT_FAILURE);
+        return 0;
     }
     FILE* output;
     if(filename[0]){
@@ -457,7 +457,7 @@ int test_segment_potentiometer(char* filename){
             fprintf(stderr, "Can't create file %s\n", filename);
             fclose(input);
             fclose(solution);
-            exit(EXIT_FAILURE);
+            return 0;
         }
     }
     int flag = 1;
