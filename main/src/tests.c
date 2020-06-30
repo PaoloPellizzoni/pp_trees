@@ -29,7 +29,7 @@ int test_avl_random(char* filename){
         if(!output){
             fprintf(stderr, "Can't create file %s\n", filename);
             fclose(input);
-            fclose(output);
+            fclose(solution);
             return 0;
         }
     }
